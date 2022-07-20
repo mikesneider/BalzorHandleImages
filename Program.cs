@@ -19,6 +19,7 @@ builder.Services.AddSingleton<IBlobFactory>(ctx =>
     var connectionString = builder.Configuration.GetConnectionString("AzureBlobConnectionString");
     return new BlobFactory(connectionString);
 });
+builder.Services.AddHttpClient();
 
 
 var app = builder.Build();

@@ -1,0 +1,64 @@
+﻿@using System.ComponentModel.DataAnnotations
+@using BalzorHandleImages.Enum
+@inject HttpClient Http
+@inject IJSRuntime JS
+@inject ISnackbar Snackbar
+@inject MediatR.IMediator Mediator
+
+
+<h1>Stream Image Data Example</h1
+<h3>ShowImages</h3>
+<MudImage Src="image" Alt="Mony the dog" Elevation="25" Class="rounded-lg"/>
+
+<p>
+    <img id="image" />
+</p>
+
+@code {
+    string dirBlob { get; set; }
+    string img_name_blob_stg {get;set;} = "image_7211e11d-3832-4b46-a0a5-bb4cfd41782d.jpg";
+    string REACT_APP_STORAGESASTOKEN = "sablobfornetapp";
+    string REACT_APP_STORAGERESOURCENAME = "sablobfornetapp";
+    private ImageDownloadFormModel _formModel;
+    private EditContext _editContext;
+    private FormStatus _formStatus = FormStatus.None;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetImageStreamAsync();
+
+            //// Get a temporary path on disk where we can download the file
+            //string downloadPath = "hello.jpg";
+
+            //// Download the public blob at https://aka.ms/bloburl
+            //new BlobClient(new Uri("https://aka.ms/bloburl")).DownloadTo(downloadPath);
+
+    }
+
+
+    private async Task<Stream> GetImageStreamAsync()
+    {
+        var command = new Commands.DownloadImage(img_name_blob_stg);
+        await this.Mediator.Publish(command);
+
+        return await Http.GetStreamAsync(img_name_blob_stg);
+    }
+
+    private async Task SetImageAsync()
+    {
+        var imageStream = await GetImageStreamAsync();
+        var dotnetImageStream = new DotNetStreamReference(imageStream);
+        await JS.InvokeVoidAsync("setImage", "image", dotnetImageStream);
+    }
+    public class ImageDownloadFormModel
+    {
+        public IBrowserFile ImageFile { get; set; }
+        public string PreviewUrl { get; set; }
+
+        [Required]
+        public byte[] ImageFileData { get; set; }
+    }
+
+}
+
+
