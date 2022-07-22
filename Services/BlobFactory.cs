@@ -26,5 +26,15 @@ namespace BalzorHandleImages.Services
             await container.CreateIfNotExistsAsync(cancellationToken: cancellationToken);
             return container;
         }
+
+        public async Task<BlobContainerClient> GetContainer(string containerName, CancellationToken cancellationToken = default)
+        {
+            //var container = cloudBlobClient.GetContainerReference("container-name");
+            //var blob = blobContainer.GetBlockBlobReference("image.png");
+            var container = new BlobContainerClient(_connectionString, containerName);
+            
+            return container;
+        }
+        
     }
 }

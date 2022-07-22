@@ -8,10 +8,10 @@
 
 <h1>Stream Image Data Example</h1
 <h3>ShowImages</h3>
-<MudImage Src="image" Alt="Mony the dog" Elevation="25" Class="rounded-lg"/>
+<MudImage Src="URI_from_blob" Alt="Mony the dog" Elevation="25" Class="rounded-lg"/>
 
 <p>
-    <img id="image" />
+    <img id="URI_from_blob" />
 </p>
 
 @code {
@@ -22,16 +22,17 @@
     private ImageDownloadFormModel _formModel;
     private EditContext _editContext;
     private FormStatus _formStatus = FormStatus.None;
+    public string URI_from_blob { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         await GetImageStreamAsync();
 
-            //// Get a temporary path on disk where we can download the file
-            //string downloadPath = "hello.jpg";
+        //// Get a temporary path on disk where we can download the file
+        //string downloadPath = "hello.jpg";
 
-            //// Download the public blob at https://aka.ms/bloburl
-            //new BlobClient(new Uri("https://aka.ms/bloburl")).DownloadTo(downloadPath);
+        //// Download the public blob at https://aka.ms/bloburl
+        //new BlobClient(new Uri("https://aka.ms/bloburl")).DownloadTo(downloadPath);
 
     }
 
@@ -40,8 +41,10 @@
     {
         var command = new Commands.DownloadImage(img_name_blob_stg);
         await this.Mediator.Publish(command);
-
+        URI_from_blob = await GetUrlImageAsync(img_name_blob_stg);
         return await Http.GetStreamAsync(img_name_blob_stg);
+
+        
     }
 
     private async Task SetImageAsync()

@@ -7,5 +7,6 @@ namespace BalzorHandleImages.Services
     public interface IBlobFactory
     {
         Task<BlobContainerClient> CreateContainerAsync(string containerName, CancellationToken cancellationToken = default);
+        Task<BlobContainerClient> GetContainer(string containerName, CancellationToken cancellationToken = default);
     }
 }
