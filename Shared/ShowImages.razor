@@ -8,59 +8,35 @@
 
 <h1>Stream Image Data Example</h1
 <h3>ShowImages</h3>
-<MudImage Src="URI_from_blob" Alt="Mony the dog" Elevation="25" Class="rounded-lg"/>
+<MudImage Src=@URI_from_blob Alt="Mony the dog" Elevation="25" Class="rounded-lg"/>
 
 <p>
-    <img id="URI_from_blob" />
+    <img scr=@URI_from_blob />
 </p>
 
 @code {
     string dirBlob { get; set; }
+    string fullURL { get; } = "https://sablobfornetapp.blob.core.windows.net/uploaded-images/";
     string img_name_blob_stg {get;set;} = "image_7211e11d-3832-4b46-a0a5-bb4cfd41782d.jpg";
-    string REACT_APP_STORAGESASTOKEN = "sablobfornetapp";
-    string REACT_APP_STORAGERESOURCENAME = "sablobfornetapp";
-    private ImageDownloadFormModel _formModel;
-    private EditContext _editContext;
     private FormStatus _formStatus = FormStatus.None;
     public string URI_from_blob { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        await GetImageStreamAsync();
-
-        //// Get a temporary path on disk where we can download the file
-        //string downloadPath = "hello.jpg";
-
-        //// Download the public blob at https://aka.ms/bloburl
-        //new BlobClient(new Uri("https://aka.ms/bloburl")).DownloadTo(downloadPath);
-
+        URI_from_blob = fullURL + img_name_blob_stg;
+        Console.WriteLine(URI_from_blob);
+        //await GetImageStreamAsync();
     }
-
-
-    private async Task<Stream> GetImageStreamAsync()
+    private async Task GetImageStreamAsync()
     {
-        var command = new Commands.DownloadImage(img_name_blob_stg);
-        await this.Mediator.Publish(command);
-        URI_from_blob = await GetUrlImageAsync(img_name_blob_stg);
-        return await Http.GetStreamAsync(img_name_blob_stg);
-
+        //var command = new Commands.DownloadImage(img_name_blob_stg);
+        //var retorna = await this.Mediator.Publish(command);
         
+        
+        //return await Http.GetStreamAsync(img_name_blob_stg);
     }
 
-    private async Task SetImageAsync()
-    {
-        var imageStream = await GetImageStreamAsync();
-        var dotnetImageStream = new DotNetStreamReference(imageStream);
-        await JS.InvokeVoidAsync("setImage", "image", dotnetImageStream);
-    }
-    public class ImageDownloadFormModel
-    {
-        public IBrowserFile ImageFile { get; set; }
-        public string PreviewUrl { get; set; }
-
-        [Required]
-        public byte[] ImageFileData { get; set; }
-    }
+    
 
 }
 
