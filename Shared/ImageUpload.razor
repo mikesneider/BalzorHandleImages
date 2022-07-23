@@ -51,6 +51,8 @@
 </EditForm>
 
 @code {
+    [Parameter]
+    public System.Guid new_name { get; set; }
 
     private ImageUploadFormModel _formModel;
     private EditContext _editContext;
@@ -103,7 +105,7 @@
         _formStatus = FormStatus.Processing;
         await this.InvokeAsync(StateHasChanged);
 
-        var command = new Commands.UploadImage(Guid.NewGuid(), _formModel.ImageFileData);
+        var command = new Commands.UploadImage(new_name, _formModel.ImageFileData);
         await this.Mediator.Publish(command);
 
         _formStatus = FormStatus.Successful;
